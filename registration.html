@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Registration form</title>
+    <style>
+      input#name:invalid:focus {
+        border: 1px solid;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="relative flex min-h-screen flex-col justify-center overflow-hidden py-6 bg-gray-50"
+    >
+      <div
+        class="relative bg-white-500 px-6 pb-5 shadow-xl ring-1 ring-gray-900/1 sm:mx-auto sm:max-w-lg sm:rounded-lg sm:px-10"
+      >
+        <div class="mx-auto max-w-md">
+          <h2 class="text-3xl text-center font-medium my-5">
+            Registration From
+          </h2>
+          <div class="divide-y divide-gray-300/50">
+            <div class="space-y-6 text-base text-ray-600">
+              <form action="" id="form">
+                <label
+                  for="name"
+                  class="text-md w-40 inline-block font-medium leading-5 text-black-900"
+                  >NAME</label
+                >
+                <input
+                  required
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500"
+                  placeholder="Enter full name"
+                />
+                <br />
+                <label
+                  for="email"
+                  class="text-md w-40 inline-block font-medium leading-3 text-black-900"
+                  >EMAIL</label
+                >
+                <input
+                  required
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500"
+                  placeholder="Enter email"
+                />
+                <br />
+                <label
+                  for="password"
+                  class="text-md w-40 inline-block font-medium leading-5 text-black-700"
+                  >PASSWORD</label
+                >
+                <input
+                  required
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500"
+                  placeholder="Enter password"
+                />
+                <br />
+                <label
+                  for="dob"
+                  class="text-md w-40 inline-block font-medium leading-5 text-black-700"
+                  min="18"
+                  max="55"
+                  >DATE OF BIRTH</label
+                >
+                <input
+                  required
+                  type="date"
+                  id="dob"
+                  name="dob"
+                  class="bg-gray-100 inline-block rounded-lg shadow-md py-3 px-4 mb-5 text-base leading-6 placeolder-gray-500"
+                  placeholder="dd/mm/yyyy"
+                />
+                <br />
+                <label
+                  for="acceptTerms"
+                  class="text-md w-50 inline-block font-medium leading-5 text-black-700 mr-4"
+                  >ACCEPT OUR TERMS & CONDITIONS</label
+                >
+                <input
+                  required
+                  type="checkbox"
+                  name="acceptTerms"
+                  id="acceptTerms"
+                  class="bg-gray-100 inline-block shadow-md px-4 py-3 mb-5 text-base leading-6 placeholder-gray-500"
+                />
+                <button
+                  type="submit"
+                  id="submit"
+                  class="rounded-lg btn-block shadow-lg px-5 py-1 bg-orange-500 text-black hover:bg-green-400 focus:outline-1px focus block"
+                >
+                  SUBMIT
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="relative bg-white px-4 mt-5 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:rounded-lg sm:px-10"
+      >
+        <div class="mx-auto">
+          <h2 class="text-x1 text-center font-bold leadin-right">Data</h2>
+          <div class="divide-y divide-black-60" id="user-entries"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let userForm = document.getElementById("form");
+      var userEntries = [];
+
+      let errors = [];
+      const retieveEntries = () => {
+        let entries = localStorage.getItem("userEntries");
+        if (entries) {
+          entries = JSON.parse(entries);
+        } else {
+          entries = [];
+        }
+        return entries;
+      };
+      const displayEntries = () => {
+        let entries = retieveEntries();
+        const tablee = entries
+          .map((entry) => {
+            const namee = `<td class='border px-4 py-2'>${entry.FullName}</td>`;
+            const emaill = `<td class='border px-4 py-2'>${entry.email}</td>`;
+            const pwdd = `<td class='border px-4 py-2'>${entry.password}</td>`;
+            const dobb = `<td class='border px-4 py-2'>${entry.dob}</td>`;
+            const act = `<td class='border px-4 py-2'>${entry.acceptTerms}</td>`;
+            const row = `<tr>${namee} ${emaill} ${pwdd} ${dobb} ${act}</tr>`;
+            return row;
+          })
+          .join("\n");
+        const table = ` <table class='table-auto w-full'>
+    <tr>
+    <th class='px-4 py-2 '>Name </th>
+    <th class='px-4 py-2 '>Email </th>
+    <th class='px-4 py-2 '>Password </th>
+    <th class='px-4 py-2 '>Dob </th>
+    <th class='px-4 py-2 '>Accepted terms? </th>
+    </tr>${tablee}
+</table>`;
+        let details = document.getElementById("user-entries");
+        details.innerHTML = table;
+      };
+      const save = (event) => {
+        event.preventDefault();
+        const FullName = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const dob = document.getElementById("dob").value;
+        const acceptTerms = document.getElementById("acceptTerms").checked;
+        var currentYear = new Date().getFullYear();
+        var birthYear = dob.split("-");
+        let year = birthYear[0];
+        var age = currentYear - year;
+        console.log({ age, currentYear, birthYear });
+        if (age < 18 || age > 55) {
+          document.getElementById("dob").style = "border:1px solid red";
+          return alert("Age must be between 18 and 55");
+        } else {
+          document.getElementById("dob").style = "border:none";
+
+          const entry = {
+            FullName,
+            email,
+            password,
+            dob,
+            acceptTerms,
+          };
+          userEntries = retieveEntries();
+          userEntries.push(entry);
+          localStorage.setItem("userEntries", JSON.stringify(userEntries));
+          displayEntries();
+          userForm.reset();
+        }
+      };
+      userForm.addEventListener("submit", save);
+      displayEntries();
+    </script>
+  </body>
+</html>
